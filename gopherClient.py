@@ -3,6 +3,10 @@ A simple "echo" client written in Python.
 
 author:  Amy Csizmar Dalal and Alden Harcourt, Sam Lengyel Luke Poley
 CS 331, Fall 2025
+
+Minimal Gopher client (RFC-style behaviour for menus and text files).
+It sends messages to and processes replies from a Gopher server following RFC 1436.
+To test, use the default port of the server you're using.
 '''
 import sys, socket
 
@@ -52,7 +56,7 @@ def main():
         print ("Received reply: \n" + replyCleaned)
     elif replyType == FILE:
         print("Received reply: \n" + replyCleaned)
-        downloadYN = input("Download" + message  +" Y/N: ").casefold()
+        downloadYN = input("Download " + message  +" Y/N: ").casefold()
         if downloadYN == YES:
             savePath = input("Enter the path to where you want to save " + message + " or press enter to save the file in your current directory: ") + message
             with open(savePath, "wb") as downloadedFile:
