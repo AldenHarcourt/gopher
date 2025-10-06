@@ -13,7 +13,7 @@ import sys, socket, os
 DEFAULT_PORT = 48999
 
 # Defines the logic for our Gopher server.
-class TCPServer:
+class GopherServer:
     # Sets up the server socket
     def __init__(self, port=DEFAULT_PORT):
         self.port = port
@@ -33,13 +33,16 @@ class TCPServer:
                 data = clientSock.recv(1024)
                 if not data:
                     break 
-                
-                selector = data.decode("ascii").strip()
+
+
+                selector = data.decode("ascii")
+                if selector != '\r\n':
+                    selector = selector.strip()
                 print(f"Received selector: '{selector}'")
 
                 # Determine which resource the client wants based on the selector.
                 try:
-                    if selector == '':
+                    if selector == '' or selector == "\r\n":
                         # An empty selector means the client wants the main menu.
                         resource_path = "content/links.txt"
                         with open(resource_path, "rb") as f:
@@ -77,12 +80,12 @@ class TCPServer:
 def main():
     if len(sys.argv) > 1:
         try:
-            server = TCPServer(int(sys.argv[1]))
+            server = GopherServer(int(sys.argv[1]))
         except ValueError as e:
             print ("Error in specifying port. Creating server on default port.")
-            server = TCPServer()
+            server = GopherServer()
     else:
-        server = TCPServer()
+        server = GopherServer()
 
     # Listen forever
     print ("Listening on port " + str(server.port))
